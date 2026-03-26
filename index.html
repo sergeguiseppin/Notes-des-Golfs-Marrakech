@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Évaluation Partenaires – Marrakech 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-dark: #1e4620;
+  --green-mid: #2d6a31;
+  --green-light: #e8f5e9;
+  --gold: #f5b731;
+  --sand: #f5f0e8;
+  --text: #1a1a1a;
+  --text-muted: #6b6b6b;
+  --white: #fff;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'DM Sans', sans-serif; background: var(--green-dark); min-height: 100vh; display: flex; flex-direction: column; }
+.app { max-width: 430px; margin: 0 auto; width: 100%; min-height: 100dvh; display: flex; flex-direction: column; background: var(--sand); position: relative; overflow: hidden; }
+.screen { display: none; flex: 1; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ══ SPLASH ══ */
+#screen-splash {
+  background: var(--green-dark); align-items: center; justify-content: center;
+  padding: 40px 32px; text-align: center; gap: 0;
+}
+.splash-flag { font-size: 64px; margin-bottom: 28px; line-height: 1; }
+.splash-sub { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 10px; }
+.splash-title { font-family: 'DM Serif Display', serif; font-size: 34px; color: #fff; line-height: 1.1; margin-bottom: 6px; }
+.splash-year { font-family: 'DM Serif Display', serif; font-size: 24px; color: rgba(255,255,255,.45); margin-bottom: 48px; }
+.splash-btn { background: #fff; color: var(--green-dark); border: none; border-radius: 50px; padding: 18px 48px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform .1s; margin-bottom: 16px; }
+.splash-btn:active { transform: scale(.96); }
+.splash-hint { font-size: 12px; color: rgba(255,255,255,.4); }
+
+/* ══ HEADER ══ */
+.hdr { background: var(--green-dark); padding: 18px 20px 16px; display: flex; align-items: center; gap: 12px; }
+.hdr-back { background: rgba(255,255,255,.15); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.hdr-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: #fff; flex: 1; }
+.hdr-step { font-size: 12px; color: rgba(255,255,255,.5); flex-shrink: 0; }
+
+/* ══ LOGIN ══ */
+#screen-login { padding: 24px 20px; gap: 20px; }
+.login-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--text); }
+.login-subtitle { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+.player-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.player-btn { background: #fff; border: 2px solid #e0d8cc; border-radius: var(--radius-sm); padding: 14px 10px; text-align: center; cursor: pointer; transition: all .15s; }
+.player-btn:active { transform: scale(.96); }
+.player-btn.selected { border-color: var(--green-mid); background: var(--green-light); }
+.player-btn-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: var(--green-dark); margin: 0 auto 8px; }
+.player-btn.selected .player-btn-avatar { background: var(--green-mid); color: #fff; }
+.player-btn-name { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.2; }
+.player-btn-prenom { font-size: 11px; color: var(--text-muted); }
+.btn-primary { background: var(--green-dark); color: #fff; border: none; border-radius: 50px; padding: 16px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all .15s; font-family: 'DM Sans', sans-serif; }
+.btn-primary:active { transform: scale(.97); }
+.btn-primary:disabled { opacity: .4; }
+
+/* ══ GOLF CHOICE ══ */
+#screen-golf { padding: 24px 20px; gap: 16px; }
+.section-label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+.golf-card { background: #fff; border: 2px solid #e0d8cc; border-radius: var(--radius); padding: 18px 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all .15s; position: relative; }
+.golf-card:active { transform: scale(.98); }
+.golf-card.selected { border-color: var(--green-mid); background: var(--green-light); }
+.golf-card.done { opacity: .5; pointer-events: none; }
+.golf-emoji { font-size: 32px; line-height: 1; }
+.golf-info { flex: 1; }
+.golf-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--text); }
+.golf-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.golf-badge { font-size: 11px; color: var(--green-mid); font-weight: 600; margin-top: 4px; }
+.golf-check { width: 24px; height: 24px; border-radius: 50%; background: var(--green-mid); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; flex-shrink: 0; }
+
+/* ══ PARTNERS ══ */
+#screen-partners { padding: 24px 20px; gap: 16px; }
+.golf-selected-tag { background: var(--green-light); border-radius: 20px; padding: 8px 14px; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--green-dark); }
+.partner-count-hint { font-size: 13px; color: var(--text-muted); }
+
+/* ══ EVALUATE ══ */
+#screen-evaluate { padding: 0; gap: 0; }
+.eval-progress { height: 4px; background: #e0d8cc; position: relative; }
+.eval-progress-bar { height: 100%; background: var(--green-mid); transition: width .4s ease; border-radius: 0 2px 2px 0; }
+.eval-player-hdr { background: #fff; padding: 20px 20px 16px; border-bottom: 1px solid #e0d8cc; }
+.eval-player-name { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); }
+.eval-player-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.eval-questions { padding: 20px; display: flex; flex-direction: column; gap: 24px; flex: 1; overflow-y: auto; }
+.q-block { background: #fff; border-radius: var(--radius); padding: 18px 16px; }
+.q-icon { font-size: 24px; margin-bottom: 8px; }
+.q-label { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+.q-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+.q-slider-row { display: flex; align-items: center; gap: 12px; }
+.q-slider { flex: 1; -webkit-appearance: none; height: 6px; border-radius: 3px; outline: none; background: #e0d8cc; cursor: pointer; }
+.q-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--green-dark); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+.q-slider::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: var(--green-dark); cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+.q-val { font-size: 22px; font-weight: 700; color: var(--green-dark); min-width: 32px; text-align: right; }
+.q-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+.q-labels span { font-size: 10px; color: #bbb; }
+.eval-footer { padding: 16px 20px; background: var(--sand); border-top: 1px solid #e0d8cc; }
+
+/* ══ SUMMARY ══ */
+#screen-summary { padding: 24px 20px; gap: 16px; overflow-y: auto; }
+.summary-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--text); }
+.summary-golf-tag { background: var(--green-light); border-radius: 20px; padding: 8px 14px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--green-dark); font-weight: 500; }
+.summary-card { background: #fff; border-radius: var(--radius); overflow: hidden; }
+.summary-card-hdr { padding: 14px 16px; border-bottom: 1px solid #f0ebe0; display: flex; align-items: center; gap: 10px; }
+.summary-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--green-dark); flex-shrink: 0; }
+.summary-pname { font-weight: 600; font-size: 15px; color: var(--text); }
+.summary-avg { margin-left: auto; font-size: 20px; font-weight: 700; color: var(--green-dark); }
+.summary-rows { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.summary-row { display: flex; justify-content: space-between; align-items: center; }
+.summary-row-label { font-size: 13px; color: var(--text-muted); }
+.summary-row-val { font-size: 15px; font-weight: 600; color: var(--text); }
+
+/* ══ RESULTS ══ */
+#screen-results { padding: 0; gap: 0; }
+.results-tabs { display: flex; background: var(--green-dark); padding: 0 12px; overflow-x: auto; }
+.results-tab { flex-shrink: 0; padding: 12px 14px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.5); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
+.results-tab.active { color: #fff; border-bottom-color: var(--gold); }
+.results-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.result-player-card { background: #fff; border-radius: var(--radius); overflow: hidden; }
+.rpc-hdr { padding: 14px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0ebe0; }
+.rpc-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--green-dark); flex-shrink: 0; }
+.rpc-name { font-weight: 600; font-size: 15px; color: var(--text); flex: 1; }
+.rpc-avg { font-size: 22px; font-weight: 700; }
+.rpc-avg-label { font-size: 10px; color: var(--text-muted); text-align: right; }
+.rpc-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
+.rpc-question { }
+.rq-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.rq-bar-row { display: flex; align-items: center; gap: 10px; }
+.rq-bar-wrap { flex: 1; height: 8px; background: #f0ebe0; border-radius: 4px; overflow: hidden; }
+.rq-bar { height: 100%; background: var(--green-mid); border-radius: 4px; width: 0; transition: width .6s ease; }
+.rq-val { font-size: 14px; font-weight: 700; color: var(--text); min-width: 28px; text-align: right; }
+.locked-msg { text-align: center; padding: 48px 24px; color: var(--text-muted); }
+.locked-icon { font-size: 48px; margin-bottom: 16px; }
+.locked-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); margin-bottom: 8px; }
+.locked-sub { font-size: 14px; line-height: 1.5; }
+
+/* ══ ADMIN ══ */
+.admin-btn { font-size: 12px; color: rgba(255,255,255,.4); background: none; border: none; cursor: pointer; padding: 4px 8px; font-family: 'DM Sans', sans-serif; }
+.reset-btn { background: none; border: 1px solid #c0392b; color: #c0392b; border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+/* ══ TOAST ══ */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--green-dark); color: #fff; border-radius: 50px; padding: 14px 24px; font-size: 14px; font-weight: 500; z-index: 999; transition: transform .3s ease; pointer-events: none; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.no-data { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SPLASH -->
+<div class="screen active" id="screen-splash">
+  <div class="splash-flag">⛳</div>
+  <div class="splash-sub">Séjour Golf</div>
+  <div class="splash-title">Évaluation<br>Partenaires</div>
+  <div class="splash-year">Marrakech 2026</div>
+  <button class="splash-btn" onclick="showScreen('screen-login')">Commencer</button>
+  <button class="splash-btn" style="background:rgba(255,255,255,.15);color:#fff" onclick="showResults()">Voir les résultats</button>
+  <div style="margin-top:16px">
+    <button class="admin-btn" onclick="adminPrompt()">Admin</button>
+  </div>
+  <div class="splash-hint" style="margin-top:12px">Évaluez vos partenaires de jeu après chaque partie</div>
+</div>
+
+<!-- LOGIN -->
+<div class="screen" id="screen-login">
+  <div class="hdr">
+    <button class="hdr-back" onclick="showScreen('screen-splash')">←</button>
+    <div class="hdr-title">Qui êtes-vous ?</div>
+  </div>
+  <div style="padding:24px 20px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:16px">
+    <div>
+      <div class="login-title">Choisissez votre nom</div>
+      <div class="login-subtitle" style="margin-top:4px">Sélectionnez votre profil pour continuer</div>
+    </div>
+    <div class="player-grid" id="player-grid"></div>
+    <button class="btn-primary" id="login-btn" onclick="doLogin()" disabled>Continuer →</button>
+  </div>
+</div>
+
+<!-- GOLF CHOICE -->
+<div class="screen" id="screen-golf">
+  <div class="hdr">
+    <button class="hdr-back" onclick="showScreen('screen-login')">←</button>
+    <div class="hdr-title">Choisir le golf</div>
+    <div class="hdr-step" id="golf-step-label"></div>
+  </div>
+  <div class="section-label" style="padding:20px 20px 0">Golf joué</div>
+  <div style="padding:12px 20px;display:flex;flex-direction:column;gap:12px" id="golf-list"></div>
+  <div style="padding:16px 20px;margin-top:auto">
+    <button class="btn-primary" id="golf-btn" onclick="goToPartners()" disabled>Continuer →</button>
+  </div>
+</div>
+
+<!-- PARTNERS -->
+<div class="screen" id="screen-partners">
+  <div class="hdr">
+    <button class="hdr-back" onclick="showScreen('screen-golf')">←</button>
+    <div class="hdr-title">Vos partenaires</div>
+  </div>
+  <div style="padding:20px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:16px">
+    <div id="partners-golf-tag" class="golf-selected-tag"></div>
+    <div>
+      <div class="section-label">Avec qui avez-vous joué ?</div>
+      <div class="partner-count-hint" style="margin-top:4px" id="partner-hint">Sélectionnez 1 à 3 partenaires</div>
+    </div>
+    <div class="player-grid" id="partners-grid"></div>
+    <button class="btn-primary" id="partners-btn" onclick="goToEvaluate()" disabled>Évaluer mes partenaires →</button>
+  </div>
+</div>
+
+<!-- EVALUATE -->
+<div class="screen" id="screen-evaluate">
+  <div class="eval-progress"><div class="eval-progress-bar" id="eval-pbar"></div></div>
+  <div class="hdr" style="padding:14px 20px">
+    <button class="hdr-back" onclick="evalBack()">←</button>
+    <div class="hdr-title" id="eval-hdr-title">Évaluation</div>
+    <div class="hdr-step" id="eval-hdr-step"></div>
+  </div>
+  <div class="eval-player-hdr">
+    <div class="eval-player-name" id="eval-player-name"></div>
+    <div class="eval-player-sub" id="eval-player-sub"></div>
+  </div>
+  <div class="eval-questions" id="eval-questions"></div>
+  <div class="eval-footer">
+    <button class="btn-primary" id="eval-next-btn" onclick="evalNext()" style="width:100%">Suivant →</button>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="screen" id="screen-summary">
+  <div class="hdr">
+    <button class="hdr-back" onclick="showScreen('screen-evaluate')">←</button>
+    <div class="hdr-title">Récapitulatif</div>
+  </div>
+  <div style="padding:20px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:16px">
+    <div>
+      <div class="summary-title">Vérifiez vos évaluations</div>
+    </div>
+    <div id="summary-golf-tag" class="golf-selected-tag"></div>
+    <div id="summary-cards"></div>
+    <button class="btn-primary" onclick="submitEval()">Valider et envoyer ✓</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="screen-results">
+  <div class="hdr">
+    <button class="hdr-back" onclick="showScreen('screen-splash')">←</button>
+    <div class="hdr-title">Résultats</div>
+    <button id="results-admin-reset" style="display:none;background:none;border:none;color:rgba(255,255,255,.5);font-size:12px;cursor:pointer" onclick="adminReset()">Reset</button>
+  </div>
+  <div class="results-tabs" id="results-tabs"></div>
+  <div class="results-body" id="results-body"></div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const PLAYERS = [
+  { id:'p01', prenom:'Laurent',   nom:'Abitbol' },
+  { id:'p02', prenom:'Patrick',   nom:'Abitbol' },
+  { id:'p03', prenom:'Thierry',   nom:'Abitbol' },
+  { id:'p04', prenom:'David',     nom:'Azoulay' },
+  { id:'p05', prenom:'Julien',    nom:'Azoulay' },
+  { id:'p06', prenom:'Yannis',    nom:'Azoulay' },
+  { id:'p07', prenom:'Eric',      nom:'Azoulay' },
+  { id:'p08', prenom:'Jonathan',  nom:'Azoulay' },
+  { id:'p09', prenom:'Pierre',    nom:'Bensoussan' },
+  { id:'p10', prenom:'Richard',   nom:'Cohen' },
+  { id:'p11', prenom:'Stephan',   nom:'Cohen' },
+  { id:'p12', prenom:'Alexandre', nom:'Dray' },
+  { id:'p13', prenom:'Franck',    nom:'Fitoussi' },
+  { id:'p14', prenom:'Ethan',     nom:'Levy' },
+];
+
+const GOLFS = [
+  { id:'g1', nom:'Royal Palm',  emoji:'🌴', sub:'Classique & élégant' },
+  { id:'g2', nom:'Noria',       emoji:'🏡', sub:'Parcours technique' },
+  { id:'g3', nom:'Akenza',      emoji:'🌄', sub:'Vue panoramique' },
+];
+
+const QUESTIONS = [
+  { id:'q1', icon:'🏌️', label:'Score représentatif du niveau de jeu', desc:'Le score reflète le vrai niveau du joueur' },
+  { id:'q2', icon:'🍀', label:'Le joueur a été plutôt chanceux', desc:'Coups chanceux, putts heureux…' },
+  { id:'q3', icon:'🤝', label:'Bonne conduite sportive', desc:'Fair-play, attitude sur le parcours' },
+];
+
+const ADMIN_CODE = '1234';
+const TOTAL_PLAYERS = PLAYERS.length;
+
+// ── STATE ──
+// evals: { golfId: { playerId_evaluator: { partnerPlayerId: { q1:7, q2:4, q3:8 } } } }
+let STATE = { evals: {} };
+let SESSION = { playerId: null, golfId: null, partnerIds: [], currentPartnerIdx: 0, currentAnswers: {} };
+let isAdmin = false;
+let currentResultsGolf = GOLFS[0].id;
+
+function saveState() { try { localStorage.setItem('ep_marrakech_26', JSON.stringify(STATE)); } catch(e){} }
+function loadState() { try { const d = localStorage.getItem('ep_marrakech_26'); if(d) STATE = JSON.parse(d); } catch(e){} }
+loadState();
+
+// ── SCREENS ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'screen-login') renderLogin();
+  if (id === 'screen-golf') renderGolfChoice();
+  if (id === 'screen-partners') renderPartners();
+  if (id === 'screen-results') renderResults();
+}
+
+// ── LOGIN ──
+let selectedPlayer = null;
+function renderLogin() {
+  selectedPlayer = null;
+  document.getElementById('login-btn').disabled = true;
+  const grid = document.getElementById('player-grid');
+  grid.innerHTML = '';
+  PLAYERS.forEach(p => {
+    const btn = document.createElement('div');
+    btn.className = 'player-btn';
+    btn.innerHTML = `<div class="player-btn-avatar">${p.prenom[0]}${p.nom[0]}</div>
+      <div class="player-btn-name">${p.nom}</div>
+      <div class="player-btn-prenom">${p.prenom}</div>`;
+    btn.onclick = () => {
+      document.querySelectorAll('.player-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedPlayer = p.id;
+      document.getElementById('login-btn').disabled = false;
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function doLogin() {
+  if (!selectedPlayer) return;
+  SESSION.playerId = selectedPlayer;
+  showScreen('screen-golf');
+}
+
+// ── GOLF CHOICE ──
+let selectedGolf = null;
+function renderGolfChoice() {
+  selectedGolf = null;
+  document.getElementById('golf-btn').disabled = true;
+  const pid = SESSION.playerId;
+  const playerEvals = STATE.evals;
+  
+  // Count already evaluated golfs by this player
+  let doneCount = 0;
+  GOLFS.forEach(g => {
+    if (playerEvals[g.id] && playerEvals[g.id][pid]) doneCount++;
+  });
+  document.getElementById('golf-step-label').textContent = `${doneCount}/${GOLFS.length} évalués`;
+
+  const list = document.getElementById('golf-list');
+  list.innerHTML = '';
+  GOLFS.forEach(g => {
+    const done = playerEvals[g.id] && playerEvals[g.id][pid];
+    const card = document.createElement('div');
+    card.className = 'golf-card' + (done ? ' done' : '');
+    card.innerHTML = `<div class="golf-emoji">${g.emoji}</div>
+      <div class="golf-info">
+        <div class="golf-name">${g.nom}</div>
+        <div class="golf-sub">${g.sub}</div>
+        ${done ? '<div class="golf-badge">✓ Déjà évalué</div>' : ''}
+      </div>
+      ${done ? '<div class="golf-check">✓</div>' : ''}`;
+    if (!done) {
+      card.onclick = () => {
+        document.querySelectorAll('.golf-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedGolf = g.id;
+        document.getElementById('golf-btn').disabled = false;
+      };
+    }
+    list.appendChild(card);
+  });
+}
+
+function goToPartners() {
+  if (!selectedGolf) return;
+  SESSION.golfId = selectedGolf;
+  showScreen('screen-partners');
+}
+
+// ── PARTNERS ──
+let selectedPartners = [];
+function renderPartners() {
+  selectedPartners = [];
+  document.getElementById('partners-btn').disabled = true;
+  const g = GOLFS.find(x => x.id === SESSION.golfId);
+  document.getElementById('partners-golf-tag').innerHTML = `${g.emoji} ${g.nom}`;
+
+  const grid = document.getElementById('partners-grid');
+  grid.innerHTML = '';
+  PLAYERS.forEach(p => {
+    if (p.id === SESSION.playerId) return; // exclude self
+    const btn = document.createElement('div');
+    btn.className = 'player-btn';
+    btn.innerHTML = `<div class="player-btn-avatar">${p.prenom[0]}${p.nom[0]}</div>
+      <div class="player-btn-name">${p.nom}</div>
+      <div class="player-btn-prenom">${p.prenom}</div>`;
+    btn.onclick = () => {
+      const idx = selectedPartners.indexOf(p.id);
+      if (idx >= 0) {
+        selectedPartners.splice(idx, 1);
+        btn.classList.remove('selected');
+      } else {
+        if (selectedPartners.length >= 3) { showToast('Maximum 3 partenaires'); return; }
+        selectedPartners.push(p.id);
+        btn.classList.add('selected');
+      }
+      document.getElementById('partners-btn').disabled = selectedPartners.length === 0;
+      document.getElementById('partner-hint').textContent = 
+        selectedPartners.length > 0 ? `${selectedPartners.length} partenaire(s) sélectionné(s)` : 'Sélectionnez 1 à 3 partenaires';
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function goToEvaluate() {
+  if (selectedPartners.length === 0) return;
+  SESSION.partnerIds = [...selectedPartners];
+  SESSION.currentPartnerIdx = 0;
+  SESSION.currentAnswers = {};
+  SESSION.partnerIds.forEach(pid => {
+    SESSION.currentAnswers[pid] = { q1: 5, q2: 5, q3: 5 };
+  });
+  showScreen('screen-evaluate');
+  renderEvaluateScreen();
+}
+
+// ── EVALUATE ──
+function renderEvaluateScreen() {
+  const idx = SESSION.currentPartnerIdx;
+  const total = SESSION.partnerIds.length;
+  const pid = SESSION.partnerIds[idx];
+  const player = PLAYERS.find(p => p.id === pid);
+
+  document.getElementById('eval-pbar').style.width = `${(idx / total) * 100}%`;
+  document.getElementById('eval-hdr-title').textContent = `Évaluation (${idx+1}/${total})`;
+  document.getElementById('eval-hdr-step').textContent = ``;
+  document.getElementById('eval-player-name').textContent = `${player.prenom} ${player.nom}`;
+  const g = GOLFS.find(x => x.id === SESSION.golfId);
+  document.getElementById('eval-player-sub').textContent = `${g.emoji} ${g.nom}`;
+  document.getElementById('eval-next-btn').textContent = idx < total - 1 ? 'Partenaire suivant →' : 'Terminer & récapituler →';
+
+  const answers = SESSION.currentAnswers[pid];
+  const container = document.getElementById('eval-questions');
+  container.innerHTML = '';
+  QUESTIONS.forEach(q => {
+    const block = document.createElement('div');
+    block.className = 'q-block';
+    block.innerHTML = `
+      <div class="q-icon">${q.icon}</div>
+      <div class="q-label">${q.label}</div>
+      <div class="q-desc">${q.desc}</div>
+      <div class="q-slider-row">
+        <input type="range" class="q-slider" min="0" max="10" step="1" value="${answers[q.id]}" id="slider-${q.id}">
+        <div class="q-val" id="val-${q.id}">${answers[q.id]}</div>
+      </div>
+      <div class="q-labels"><span>0</span><span>5</span><span>10</span></div>`;
+    container.appendChild(block);
+    document.getElementById(`slider-${q.id}`).addEventListener('input', function() {
+      SESSION.currentAnswers[pid][q.id] = parseInt(this.value);
+      document.getElementById(`val-${q.id}`).textContent = this.value;
+    });
+  });
+}
+
+function evalBack() {
+  if (SESSION.currentPartnerIdx > 0) {
+    SESSION.currentPartnerIdx--;
+    renderEvaluateScreen();
+  } else {
+    showScreen('screen-partners');
+  }
+}
+
+function evalNext() {
+  const total = SESSION.partnerIds.length;
+  if (SESSION.currentPartnerIdx < total - 1) {
+    SESSION.currentPartnerIdx++;
+    renderEvaluateScreen();
+  } else {
+    renderSummary();
+    showScreen('screen-summary');
+  }
+}
+
+// ── SUMMARY ──
+function renderSummary() {
+  const g = GOLFS.find(x => x.id === SESSION.golfId);
+  document.getElementById('summary-golf-tag').innerHTML = `${g.emoji} ${g.nom}`;
+
+  const container = document.getElementById('summary-cards');
+  container.innerHTML = '';
+  SESSION.partnerIds.forEach(pid => {
+    const player = PLAYERS.find(p => p.id === pid);
+    const answers = SESSION.currentAnswers[pid];
+    const vals = Object.values(answers);
+    const avg = (vals.reduce((a,b) => a+b, 0) / vals.length).toFixed(1);
+
+    const card = document.createElement('div');
+    card.className = 'summary-card';
+    card.style.marginBottom = '12px';
+    let rowsHtml = QUESTIONS.map(q => 
+      `<div class="summary-row">
+        <div class="summary-row-label">${q.icon} ${q.label}</div>
+        <div class="summary-row-val">${answers[q.id]}/10</div>
+      </div>`).join('');
+    card.innerHTML = `<div class="summary-card-hdr">
+      <div class="summary-avatar">${player.prenom[0]}${player.nom[0]}</div>
+      <div class="summary-pname">${player.prenom} ${player.nom}</div>
+      <div class="summary-avg">${avg}</div>
+    </div>
+    <div class="summary-rows">${rowsHtml}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function submitEval() {
+  const gid = SESSION.golfId;
+  const pid = SESSION.playerId;
+  if (!STATE.evals[gid]) STATE.evals[gid] = {};
+  STATE.evals[gid][pid] = SESSION.currentAnswers;
+  saveState();
+  showToast('Évaluations enregistrées ✓');
+  setTimeout(() => showScreen('screen-splash'), 1200);
+}
+
+// ── RESULTS ──
+function showResults() {
+  showScreen('screen-results');
+}
+
+function renderResults() {
+  // Tabs
+  const tabs = document.getElementById('results-tabs');
+  tabs.innerHTML = '';
+  GOLFS.forEach(g => {
+    const tab = document.createElement('div');
+    tab.className = 'results-tab' + (g.id === currentResultsGolf ? ' active' : '');
+    tab.textContent = `${g.emoji} ${g.nom}`;
+    tab.onclick = () => { currentResultsGolf = g.id; renderResults(); };
+    tabs.appendChild(tab);
+  });
+
+  const body = document.getElementById('results-body');
+  body.innerHTML = '';
+
+  // Check if enough people have submitted for this golf
+  const golfEvals = STATE.evals[currentResultsGolf] || {};
+  const submitters = Object.keys(golfEvals).length;
+  document.getElementById('results-admin-reset').style.display = isAdmin ? 'block' : 'none';
+
+  if (!isAdmin && submitters < TOTAL_PLAYERS) {
+    body.innerHTML = `<div class="locked-msg">
+      <div class="locked-icon">🔒</div>
+      <div class="locked-title">Résultats verrouillés</div>
+      <div class="locked-sub">Les résultats seront visibles quand les ${TOTAL_PLAYERS} joueurs auront soumis leurs évaluations pour ce golf.<br><br><strong>${submitters}/${TOTAL_PLAYERS}</strong> évaluations reçues.</div>
+    </div>`;
+    return;
+  }
+
+  if (submitters === 0) {
+    body.innerHTML = `<div class="no-data">Aucune évaluation pour ce golf pour l'instant.</div>`;
+    return;
+  }
+
+  // Aggregate: for each player, collect all scores from others
+  const scores = {}; // { playerId: { q1: [scores], q2: [...], q3: [...] } }
+  PLAYERS.forEach(p => { scores[p.id] = { q1: [], q2: [], q3: [] }; });
+
+  Object.entries(golfEvals).forEach(([evaluatorId, partnerAnswers]) => {
+    Object.entries(partnerAnswers).forEach(([partnerId, answers]) => {
+      if (scores[partnerId]) {
+        QUESTIONS.forEach(q => {
+          if (answers[q.id] !== undefined) scores[partnerId][q.id].push(answers[q.id]);
+        });
+      }
+    });
+  });
+
+  // Sort by overall average descending
+  const ranked = PLAYERS.map(p => {
+    const s = scores[p.id];
+    const all = [...s.q1, ...s.q2, ...s.q3];
+    const avg = all.length > 0 ? all.reduce((a,b)=>a+b,0)/all.length : null;
+    return { ...p, scores: s, avg };
+  }).filter(p => p.avg !== null).sort((a,b) => b.avg - a.avg);
+
+  if (ranked.length === 0) {
+    body.innerHTML = `<div class="no-data">Aucune donnée agrégée disponible.</div>`;
+    return;
+  }
+
+  ranked.forEach(({ prenom, nom, id, scores: s, avg }) => {
+    const color = avg >= 8 ? '#2d6a31' : avg >= 6 ? '#8a6200' : '#c0392b';
+    const card = document.createElement('div');
+    card.className = 'result-player-card';
+    let qHtml = QUESTIONS.map(q => {
+      const vals = s[q.id];
+      const qavg = vals.length > 0 ? (vals.reduce((a,b)=>a+b,0)/vals.length) : 0;
+      const w = Math.round(qavg / 10 * 100);
+      return `<div class="rpc-question">
+        <div class="rq-label">${q.icon} ${q.label} <span style="font-size:10px;color:#bbb">(${vals.length} avis)</span></div>
+        <div class="rq-bar-row">
+          <div class="rq-bar-wrap"><div class="rq-bar" data-w="${w}" style="width:0%"></div></div>
+          <div class="rq-val">${qavg.toFixed(1)}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    card.innerHTML = `<div class="rpc-hdr">
+      <div class="rpc-avatar">${prenom[0]}${nom[0]}</div>
+      <div class="rpc-name">${prenom} ${nom}</div>
+      <div>
+        <div class="rpc-avg" style="color:${color}">${avg.toFixed(1)}</div>
+        <div class="rpc-avg-label">/10 moy.</div>
+      </div>
+    </div>
+    <div class="rpc-body">${qHtml}</div>`;
+    body.appendChild(card);
+  });
+
+  setTimeout(() => body.querySelectorAll('.rq-bar').forEach(b => b.style.width = b.dataset.w + '%'), 100);
+}
+
+function adminReset() {
+  const g = GOLFS.find(x => x.id === currentResultsGolf);
+  if (!confirm(`Réinitialiser toutes les évaluations de ${g.nom} ?`)) return;
+  delete STATE.evals[currentResultsGolf];
+  saveState();
+  renderResults();
+}
+
+// ── ADMIN ──
+function adminPrompt() {
+  const code = prompt('Code admin :');
+  if (code === ADMIN_CODE) {
+    isAdmin = true;
+    showToast('Mode admin activé ✓');
+  } else {
+    showToast('Code incorrect');
+  }
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+</script>
+</body>
+</html>
